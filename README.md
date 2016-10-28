@@ -1,4 +1,4 @@
-Game Programming Workshop 2016 投稿論文
+Game Programming Workshop 2016 投稿論文
 「カーリングAIに対するモンテカルロ木探索の適用」
 実験コード
 
@@ -12,7 +12,7 @@ Katsuki Ohto 2016/10/6
 
 2. projects/curling 下へ移動
 
-3. Makefile を書き換える、特にbox2d周り
+3. Makefile を書き換える、特にbox2d周り
    macのhomebrewにてインストールした場合には LIBRARIES に -lbox2d があればOK
 
 4. make release
