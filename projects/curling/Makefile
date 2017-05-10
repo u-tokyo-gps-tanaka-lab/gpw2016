@@ -3,8 +3,8 @@
 #
 CXX       = g++
 CXXFLAGS  = -std=c++14 -Wall -Wextra -Wcast-qual -Wno-unused-function -Wno-sign-compare -Wno-unused-value -Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-type-limits -Wno-vla -Wno-strict-aliasing -fno-exceptions -fno-rtti -pedantic -Wno-long-long -msse4.2 -mbmi -mbmi2 -D__STDC_CONSTANT_MACROS -DHAVE_SSE2=1 -DDSFMT_MEXP=521 -DLONGDOUBLE
-INCLUDES  =
-LIBRARIES = -lbox2d -lpthread
+INCLUDES  = -I/path/to/Box2D/headers/
+LIBRARIES = /path/to/libBox2D.a -lpthread
 
 ifeq ($(OS),Windows_NT)
   # for Windows
@@ -73,96 +73,96 @@ preparation $(directories):
 	mkdir -p $(directories)
 
 server :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)server $(sources_dir)server/server.cpp $(sources_dir)server/CurlingSimulator.cpp $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)server $(sources_dir)server/server.cpp $(sources_dir)server/CurlingSimulator.cpp $(LIBRARIES) $(INCLUDES)
 
 server_gat :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)server_gat $(sources_dir)server/server.cpp $(sources_dir)server/CurlingSimulator.cpp -DRULE_ERROR_GAT $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)server_gat $(sources_dir)server/server.cpp $(sources_dir)server/CurlingSimulator.cpp -DRULE_ERROR_GAT $(LIBRARIES) $(INCLUDES)
 
 client :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client $(sources_dir)client.cc -DDEFAULT_SETTINGS $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client $(sources_dir)client.cc -DDEFAULT_SETTINGS $(LIBRARIES) $(INCLUDES)
 
 client_pure :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_pure $(sources_dir)client.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_pure $(sources_dir)client.cc $(LIBRARIES) $(INCLUDES)
 
 client_mcts :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts $(sources_dir)client.cc -DUSE_MCTS -DUSE_DIVING $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts $(sources_dir)client.cc -DUSE_MCTS -DUSE_DIVING $(LIBRARIES) $(INCLUDES)
 
 client_pure_policy :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_pure_policy $(sources_dir)client.cc -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_pure_policy $(sources_dir)client.cc -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES) $(INCLUDES)
 
 client_mcts_policy :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_policy $(sources_dir)client.cc -DUSE_MCTS -DUSE_DIVING -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_policy $(sources_dir)client.cc -DUSE_MCTS -DUSE_DIVING -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES) $(INCLUDES)
 
 client_mcts_limited :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_limited $(sources_dir)client.cc -DUSE_MCTS $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_limited $(sources_dir)client.cc -DUSE_MCTS $(LIBRARIES) $(INCLUDES)
 
 client_mcts_policy_limited :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_policy_limited $(sources_dir)client.cc -DUSE_MCTS -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_policy_limited $(sources_dir)client.cc -DUSE_MCTS -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES) $(INCLUDES)
 
 client_mcts_full :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_full $(sources_dir)client.cc -DMODE_SKY $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_full $(sources_dir)client.cc -DMODE_SKY $(LIBRARIES) $(INCLUDES)
 
 client_mcts_policy_full :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_policy_full $(sources_dir)client.cc -DMODE_SKY -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)client_mcts_policy_full $(sources_dir)client.cc -DMODE_SKY -DUSE_POLICY_SCORE -DUSE_HANDMADE_MOVES $(LIBRARIES) $(INCLUDES)
 
 engine :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)engine $(sources_dir)client.cc -DENGINE $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)engine $(sources_dir)client.cc -DENGINE $(LIBRARIES) $(INCLUDES)
 
 policy_client :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)policy_client $(sources_dir)client.cc -DPOLICY_ONLY $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)policy_client $(sources_dir)client.cc -DPOLICY_ONLY $(LIBRARIES) $(INCLUDES)
 
 policy_engine :
-	$(CXX) $(CXXFLAGS) -o $(output_dir)policy_engine $(sources_dir)client.cc -DPOLICY_ONLY -DENGINE $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)policy_engine $(sources_dir)client.cc -DPOLICY_ONLY -DENGINE $(LIBRARIES) $(INCLUDES)
 
 dcl_converter: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)dcl_converter $(sources_dir)log/dcl_converter.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)dcl_converter $(sources_dir)log/dcl_converter.cc $(LIBRARIES) $(INCLUDES)
 
 dcl_counter: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)dcl_counter $(sources_dir)log/dcl_counter.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)dcl_counter $(sources_dir)log/dcl_counter.cc $(LIBRARIES) $(INCLUDES)
 
 eval_learner: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)eval_learner $(sources_dir)ayumu/evlearner.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)eval_learner $(sources_dir)ayumu/evlearner.cc $(LIBRARIES) $(INCLUDES)
 
 policy_learner: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)policy_learner $(sources_dir)ayumu/pglearner.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)policy_learner $(sources_dir)ayumu/pglearner.cc $(LIBRARIES) $(INCLUDES)
 
 dc_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)dc_test $(sources_dir)test/dc_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)dc_test $(sources_dir)test/dc_test.cc $(LIBRARIES) $(INCLUDES)
 
 simulator_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)simulator_test $(sources_dir)test/simulator_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)simulator_test $(sources_dir)test/simulator_test.cc $(LIBRARIES) $(INCLUDES)
 
 interpolation_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)interpolation_test $(sources_dir)test/interpolation_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)interpolation_test $(sources_dir)test/interpolation_test.cc $(LIBRARIES) $(INCLUDES)
 
 shot_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)shot_test $(sources_dir)test/shot_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)shot_test $(sources_dir)test/shot_test.cc $(LIBRARIES) $(INCLUDES)
 
 error_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)error_test $(sources_dir)test/error_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)error_test $(sources_dir)test/error_test.cc $(LIBRARIES) $(INCLUDES)
 
 eval_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)eval_test $(sources_dir)test/eval_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)eval_test $(sources_dir)test/eval_test.cc $(LIBRARIES) $(INCLUDES)
 
 solver_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)solver_test $(sources_dir)test/solver_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)solver_test $(sources_dir)test/solver_test.cc $(LIBRARIES) $(INCLUDES)
 
 variance_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)variance_test $(sources_dir)test/variance_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)variance_test $(sources_dir)test/variance_test.cc $(LIBRARIES) $(INCLUDES)
 
 logic_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)logic_test $(sources_dir)test/logic_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)logic_test $(sources_dir)test/logic_test.cc $(LIBRARIES) $(INCLUDES)
 
 ayumu_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)ayumu_test $(sources_dir)test/ayumu_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)ayumu_test $(sources_dir)test/ayumu_test.cc $(LIBRARIES) $(INCLUDES)
 
 table_generator: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)table_generator $(sources_dir)test/table_generator.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)table_generator $(sources_dir)test/table_generator.cc $(LIBRARIES) $(INCLUDES)
 
 image_log_maker: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)image_log_maker $(sources_dir)test/image_log_maker.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)image_log_maker $(sources_dir)test/image_log_maker.cc $(LIBRARIES) $(INCLUDES)
 
 jiritsu_test: $(directories) $(objects)
-	$(CXX) $(CXXFLAGS) -o $(output_dir)jiritsu_test $(sources_dir)test/jiritsu_test.cc $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) -o $(output_dir)jiritsu_test $(sources_dir)test/jiritsu_test.cc $(LIBRARIES) $(INCLUDES)
 
 -include $(dependencies)
